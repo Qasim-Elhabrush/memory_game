@@ -1,0 +1,25 @@
+.characterCard{
+    background-color: rgba(52, 50, 144, 0.348);
+    margin: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 20px;
+}
+.characterCard:hover{
+    background-color: rgba(89, 89, 254, 0.412);
+    scale: 1.05;
+}
+.characterImage{
+    width: 70%;
+    height:80%;
+    border-radius: 20px;
+}
+
+.characterName{
+    font-size: 1.25em;
+    font-weight: bold;
+    color:white;
+}

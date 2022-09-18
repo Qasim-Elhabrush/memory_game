@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { Drawer } from "@mui/material";
-import Icon from "@mui/material/Icon";
-import {games} from "./games";
-
+import MenuIcon from "@mui/icons-material/Menu";
+import { games } from "./games";
+import CharacterCard from "./Card";
 
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [selectedGame,setSelectedGame] = React.useState(games[0])
+  const [selectedGame, setSelectedGame] = React.useState(games[0]);
+  const [currentScore, setCurrentScore] = React.useState(0);
+  const [highScore, setHighScore] = React.useState([0, 0, 0, 0, 0]);
+  const [clickedCharacters, setClickedCharacters] = React.useState([]);
+  const [indexOfSelectedGame, setIndexOfSelectedGame] = React.useState(0);
+
   function openDrawer() {
     if (isDrawerOpen !== true) {
       setIsDrawerOpen(true);
@@ -16,26 +21,91 @@ export default function App() {
     }
   }
 
+  let backgroundImg = selectedGame["background"];
   function closeDrawer() {
     setIsDrawerOpen(false);
   }
-  function toggleDrawer() {
-    isDrawerOpen === true ? setIsDrawerOpen(false) : setIsDrawerOpen(true);
+
+  function restartGameProgress() {
+    setClickedCharacters([]);
+    setCurrentScore(0);
   }
+
+  function changeGame(indexOfGame) {
+    restartGameProgress();
+    setSelectedGame(games[indexOfGame]);
+    setIndexOfSelectedGame(indexOfGame);
+  }
+
+  function onClickCharacterHandler(characterName) {
+    if (clickedCharacters.includes(characterName)) {
+      restartGameProgress();
+    } else {
+      setCurrentScore((prevScore) => prevScore + 1);
+      setClickedCharacters(prevClickedCharacters=>[...prevClickedCharacters,characterName])
+       if (currentScore === 8) {       
+        console.log("You win");
+      }
+    }
+  }
+  React.useEffect(()=>{if (currentScore > highScore[indexOfSelectedGame]) {
+    setHighScore(prevHighScore=>{
+      const newArr =prevHighScore;
+      newArr[indexOfSelectedGame] = currentScore;
+      return newArr
+    })
+  }},[currentScore,highScore,indexOfSelectedGame]);
+  
+  
+  
 
   return (
     <div>
-      <Icon id="menuIcon" onClick={toggleDrawer}>
-        menu
-      </Icon>
       <div id="head">
+        <MenuIcon onClick={openDrawer} id="menuIcon" />
         <Drawer onClose={closeDrawer} open={isDrawerOpen} anchor="left">
           <div className="gameMenu">
-            <div>Alladin</div>
-            <div>Moana</div>
-            <div>Frozen</div>
-            <div>Lion King</div>
-            <div>Toy Story</div>
+            <div id="menuTitle">Choose Your Game:</div>
+            <div
+              onClick={() => {
+                changeGame(0);
+              }}
+              className="menu--Game"
+            >
+              Alladin
+            </div>
+            <div
+              onClick={() => {
+                changeGame(1);
+              }}
+              className="menu--Game"
+            >
+              Finding Nemo
+            </div>
+            <div
+              onClick={() => {
+                changeGame(2);
+              }}
+              className="menu--Game"
+            >
+              Frozen
+            </div>
+            <div
+              onClick={() => {
+                changeGame(3);
+              }}
+              className="menu--Game"
+            >
+              The Lion King
+            </div>
+            <div
+              onClick={() => {
+                changeGame(4);
+              }}
+              className="menu--Game"
+            >
+              Toy Story
+            </div>
           </div>
         </Drawer>
         <div id="titleContainer">
@@ -46,14 +116,26 @@ export default function App() {
         </div>
 
         <div id="scores">
-          <div>Score:</div>
-          <div>HighScore:</div>
+          <div>Score:&nbsp; {currentScore}</div>
+          <div>HighScore: &nbsp;{highScore[indexOfSelectedGame]}</div>
         </div>
       </div>
 
       <div id="cardContainer" style={{backgroundImage : selectedGame["background"]}}>
-        
+
+      <div
+        id="cardContainer"
+        style={{ backgroundImage: `url(${backgroundImg})` }}
+      >
+        {selectedGame.characters.map((character) => (
+          <CharacterCard
+            image={character.img}
+            onClickHandler={onClickCharacterHandler}
+            characterName={character.name}
+          />
+        ))}
       </div>
+    </div>
     </div>
   );
 }
