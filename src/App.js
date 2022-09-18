@@ -4,6 +4,7 @@ import { Drawer } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { games } from "./games";
 import CharacterCard from "./Card";
+import Scores from './Scores'
 
 export default function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -37,27 +38,28 @@ export default function App() {
     setIndexOfSelectedGame(indexOfGame);
   }
 
-  function onClickCharacterHandler(characterName) {
+  function onClickCharacterHandler(characterName) { 
     if (clickedCharacters.includes(characterName)) {
       restartGameProgress();
     } else {
-      setCurrentScore((prevScore) => prevScore + 1);
-      setClickedCharacters(prevClickedCharacters=>[...prevClickedCharacters,characterName])
-       if (currentScore === 8) {       
-        console.log("You win");
+      const increasedScore = currentScore + 1;
+      setCurrentScore(increasedScore);
+      setClickedCharacters((prevClickedCharacters) => [
+        ...prevClickedCharacters,
+        characterName,
+      ]);
+      if (currentScore === 8) {
+        console.log('You win');
+      }
+      if (increasedScore > highScore[indexOfSelectedGame]) {
+        setHighScore((prevHighScore) => {
+          const newArr = [...prevHighScore];
+          newArr[indexOfSelectedGame] = currentScore;
+          return newArr;
+        });
       }
     }
   }
-  React.useEffect(()=>{if (currentScore > highScore[indexOfSelectedGame]) {
-    setHighScore(prevHighScore=>{
-      const newArr =prevHighScore;
-      newArr[indexOfSelectedGame] = currentScore;
-      return newArr
-    })
-  }},[currentScore,highScore,indexOfSelectedGame]);
-  
-  
-  
 
   return (
     <div>
@@ -114,28 +116,26 @@ export default function App() {
             <h5 id="objective">Dont click the same character twice!</h5>
           </div>
         </div>
-
-        <div id="scores">
-          <div>Score:&nbsp; {currentScore}</div>
-          <div>HighScore: &nbsp;{highScore[indexOfSelectedGame]}</div>
-        </div>
+        <Scores highScore = {highScore} currentScore = {currentScore} indexOfSelectedGame={indexOfSelectedGame}/>
       </div>
-
-      <div id="cardContainer" style={{backgroundImage : selectedGame["background"]}}>
 
       <div
         id="cardContainer"
-        style={{ backgroundImage: `url(${backgroundImg})` }}
+        style={{ backgroundImage: selectedGame["background"] }}
       >
-        {selectedGame.characters.map((character) => (
-          <CharacterCard
-            image={character.img}
-            onClickHandler={onClickCharacterHandler}
-            characterName={character.name}
-          />
-        ))}
+        <div
+          id="cardContainer"
+          style={{ backgroundImage: `url(${backgroundImg})` }}
+        >
+          {selectedGame.characters.map((character) => (
+            <CharacterCard
+              image={character.img}
+              onClickHandler={onClickCharacterHandler}
+              characterName={character.name}
+            />
+          ))}
+        </div>
       </div>
-    </div>
     </div>
   );
 }
