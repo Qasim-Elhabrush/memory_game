@@ -72,11 +72,17 @@ export default function App() {
       if (increasedScore > highScore[indexOfSelectedGame]) {
         setHighScore((prevHighScore) => {
           const newArr = [...prevHighScore];
-          newArr[indexOfSelectedGame] = increasedScore;
+          if(increasedScore!==8){
+          newArr[indexOfSelectedGame] = increasedScore;}
+          else{
+            newArr[indexOfSelectedGame] = "You Won!";
+            restartGameProgress();
+          }
           return newArr;
         });
       }
     }
+   
   }
   function hideFooter(){
     setFooterVisible(false)   
