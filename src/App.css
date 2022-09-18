@@ -72,3 +72,26 @@
   margin-left: 45%;
   font-size: 1.5em;
 }
+footer{
+  bottom: 0px;
+  position:absolute;
+  z-index: 2;
+  background-color: antiquewhite;
+  display: flex;
+  width: 100vw;
+  height: 2vh;
+  justify-content: center;
+  cursor: pointer;
+}
+footer > button{
+  position: relative;
+  right:-43%;
+  background-color: rgba(254, 254, 254, 0);
+  border:none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
+}
+footer > button:hover{
+  background-color: rgba(248, 142, 142, 0.362);
+}
