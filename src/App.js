@@ -167,7 +167,7 @@ export default function App() {
           ))}
         </div>
       </div>
-      {footerVisible===true?<footer onClick={hideFooter}><div>Pictures sorced from Disney.com</div><button onClick={hideFooter}>X</button></footer>:false}
+      {footerVisible===true?<footer onClick={hideFooter}><div>Pictures sourced from Disney.com</div><button onClick={hideFooter}>X</button></footer>:false}
     </div>
   );
 }
